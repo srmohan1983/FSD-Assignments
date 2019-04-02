@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<title>
+    My first Video Player Project!!!
+</title>
+ 
+<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+    <h1 class="display-4 text-center">
+        Welcome to HTML Media Player
+    </h1>
+    <div class="container d-flex flex-column align-items-center">
+        <div>
+            <video id="vid" width="640" height="365" style="background-color: black">
+                <source src="train.MOV">
+            </video>
+        </div>
+        <div class="align-items-center">
+            <span><button id="playVideo"><i class="fa fa-play" style="font-size:24px;"></i></button></span>
+            <span><button id="pauseVideo"><i class="fa fa-pause" style="font-size:24px;"></i></button></span>
+            <span><button id="VolUp"><i class="fa fa-volume-up" style="font-size:24px;"></i></button></span>
+            <span><button id="VolDown"><i class="fa fa-volume-down" style="font-size:24px;"></i></button></span>
+            <span><button id="muteToggle"><i class="fa fa-volume-off" style="font-size:24px;"></i></button></span>
+            <span><button id="reloadVideo"><i class="fa fa-repeat" style="font-size:24px;"></i></button></span>
+            <span><button id="Like"><i class="fa fa-thumbs-o-up" style="font-size:24px;"></i></button></span>
+            <span id="LikeCounter"> </span>
+            <span><button id="UnLike"><i class="fa fa-thumbs-o-down" style="font-size:24px;"></i></button></span>
+            <span id="UnLikeCounter"> </span>
+        </div>
+        <div>
+            <progress id="Progressbar" min='0' max='100' value='0' style="width:640px;">0% played</progress>
+        </div>
+        <div>
+            <ul id="playlist">
+                <li class="p-2">
+                    <span><button id="playVideo"><i class="fa fa-play" style="font-size:24px;"></i></button></span>
+                    <a href="#">Introduction to HTML5</a>
+                </li>
+                <li class="p-2">
+                    <span><button id="playVideo"><i class="fa fa-play" style="font-size:24px;"></i></button></span>
+                    <a href="#">Introduction to Styling with CSS3</a>
+                </li>
+                <li class="p-2">
+                    <span><button id="playVideo"><i class="fa fa-play" style="font-size:24px;"></i></button></span>
+                    <a href="#">Introduction to Bootstrap 4</a>
+                </li>
+                <li class="p-2">
+                    <span><button id="playVideo"><i class="fa fa-play" style="font-size:24px;"></i></button></span>
+                    <a href="#">Learn to Create Website with HTML5/CSS3 and Bootstrap4</a>
+                </li>
+                <li class="p-2">
+                    <span><button id="playVideo"><i class="fa fa-play" style="font-size:24px;"></i></button></span>
+                    <a href="#">Introduction to Javascript</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
+    <script>
+        $(document).ready(function () {
+            //$('#vid').prop("volume",0);
+            $('#pauseVideo').attr("disabled", true);
+            localStorage.setItem("LikeCounter", 0);
+            localStorage.setItem("UnLikeCounter", 0);
+            GetLikeCounter = localStorage.getItem("LikeCounter");
+            GetUnLikeCounter = localStorage.getItem("LikeCounter");
+            $('#playVideo').click(function () {
+                $('#vid').get(0).play();
+                $('#playVideo').attr("disabled", true);
+                $('#pauseVideo').attr("disabled", false);
+
+            });
+            $('#pauseVideo').click(function () {
+                $('#vid').get(0).pause();
+                $('#pauseVideo').attr("disabled", true);
+                $('#playVideo').attr("disabled", false);
+            });
+            $('#reloadVideo').click(function () {
+                $('#vid').get(0).load();
+                $('#playVideo').attr("disabled", true);
+                $('#vid').get(0).play();
+                $('#pauseVideo').attr("disabled", false);
+            });
+            var volumecnt;
+            $('#VolUp').click(function () {
+                volumecnt = $('#vid').prop("volume") + 0.2;
+                if (volumecnt > 1) {
+                    volumecnt = 1;
+                }
+                $('#vid').prop("volume", volumecnt);
+            });
+            $('#VolDown').click(function () {
+                volumecnt = $('#vid').prop("volume") - 0.2;
+                if (volumecnt <= 0) {
+                    volumecnt = 0;
+                }
+                $('#vid').prop("volume", volumecnt);
+            })
+            $('#muteToggle').click(function () {
+                if ($('#vid').prop('muted')) {
+                    $('#vid').prop('muted', false);
+                } else {
+                    $('#vid').prop('muted', true);
+                }
+
+            })
+            $('#Like').click(function () {
+                $('#LikeCounter').text(incrementLike());
+            });
+            $('#UnLike').click(function () {
+                $('#UnLikeCounter').text(incrementUnLike()).css("color", "red");
+            });
+            $('#vid').on('ended', function () {
+                $('#playVideo').attr("disabled", false);
+                $('#pauseVideo').attr("disabled", true);
+                $('#vid').get(0).load();
+            });
+
+            function incrementLike() {
+                if (GetLikeCounter > 0) {
+                    localStorage.setItem("LikeCounter", ++GetLikeCounter);
+                } else {
+                    GetLikeCounter = 1;
+                    localStorage.setItem("LikeCounter", GetLikeCounter);
+                }
+                return GetLikeCounter;
+            }
+
+            function incrementUnLike() {
+                if (GetUnLikeCounter > 0) {
+                    localStorage.setItem("UnLikeCounter", ++GetUnLikeCounter);
+                } else {
+                    GetUnLikeCounter = 1;
+                    localStorage.setItem("UnLikeCounter", GetUnLikeCounter);
+                }
+                return GetUnLikeCounter;
+            }
+
+            $('#vid').on('timeupdate', UpdateProgress);
+            function UpdateProgress() {
+                var percentage = Math.floor((100 / this.duration) * this.currentTime);
+                $('#Progressbar').attr('value', percentage);
+                $('#Progressbar').html = percentage + '%played';
+            }
+        });
+    </script>
+</body>
+
+</html>
