@@ -1,0 +1,12 @@
+@media screen and (orientation: landscape) {
+    #playlist {
+      position: fixed;
+      /* width: 2.65em; */
+      height: 100%;
+    }}
+
+    @media screen and (orientation: portrait) {
+        #playlist {
+          width: 100%;
+        }
+      }
