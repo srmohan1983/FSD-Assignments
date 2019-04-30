@@ -1,0 +1,15 @@
+<div class="align-items-center">
+  <span><button #button id="playVideo" (click)="playVid()"><i class="fa fa-play" style="font-size:24px;"></i></button></span>
+  <span><button #button id="pauseVideo"  (click)="pauseVid()"><i class="fa fa-pause" style="font-size:24px;"></i></button></span>
+  <span><button #button id="VolUp" (click)="volupVid()"><i class="fa fa-volume-up" style="font-size:24px;"></i></button></span>
+  <span><button #button id="VolDown" (click)="voldownVid()"><i class="fa fa-volume-down" style="font-size:24px;"></i></button></span>
+  <span><button #button id="muteToggle" (click)="muteVid()"><i class="fa fa-volume-off" style="font-size:24px;"></i></button></span>
+  <span><button #button id="reloadVideo" (click)="reloadVid()"><i class="fa fa-repeat" style="font-size:24px;"></i></button></span>
+  <span><button #button id="Like" (click)="likeVid()"><i class="fa fa-thumbs-o-up" style="font-size:24px;"></i></button></span>
+  <span id="LikeCounter">{{ likeCnt }} </span>
+  <span><button id="UnLike" (click)="unLikeVid()"><i class="fa fa-thumbs-o-down" style="font-size:24px;"></i></button></span>
+  <span id="UnLikeCounter">{{ unLikeCnt }} </span>
+</div>
+<div>
+  <progress #Progressbar id="Progressbar" min='0' max='100' value='0' style="width:640px;">0% played</progress>
+</div>

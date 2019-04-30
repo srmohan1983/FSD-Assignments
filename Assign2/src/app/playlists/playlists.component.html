@@ -1,0 +1,8 @@
+<div>
+  <ul id="playlist">
+      <li class="p-2" *ngFor="let video of videos">
+          <span><button id="playVideo"><i class="fa fa-play" style="font-size:24px;"></i></button></span>
+          <a href="#">{{ video.url }}</a>
+      </li>
+  </ul>
+</div>

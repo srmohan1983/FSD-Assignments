@@ -1,0 +1,9 @@
+#UnLikeCounter {
+  color: red;
+}
+
+#LikeCounter, #UnLikeCounter {
+  font-size: 1.5rem;
+}
+
+
