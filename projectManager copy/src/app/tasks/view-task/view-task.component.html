@@ -1,0 +1,60 @@
+<div class="modal" id="parentTaskModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Modal Heading</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div *ngFor="let project of projects | filter : searchText: 'Project'">
+          <div class="list-group" (click)="onSelectProject(project)">
+            <button type="button" class="btn btn-primary"
+              class="list-group-item list-group-item-action" data-dismiss="modal">{{project.Project}}</button>
+          </div>
+        </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <form [formGroup]="viewTaskForm">
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">Project</label>
+      <div class="col-3">
+        <input type="text" class="form-control" placeholder="Project Title" readonly formControlName="projectSearch">
+      </div>
+      <div class="col-1">
+        <button type="submit" name="" id="SearchProject" class="btn btn-primary" btn-lg btn-block data-toggle="modal"
+          data-target="#parentTaskModal">Search</button>
+      </div>
+      <div class="mr-2">
+        Sort By:
+      </div>
+      <div class="mr-2">
+        <button type="button" name="StartDate" class="btn btn-primary btn-sm btn-block">Start Date</button>
+      </div>
+      <div class="mr-2">
+        <button type="button" name="EndDate" class="btn btn-primary btn-sm btn-block">End Date</button>
+      </div>
+      <div class="mr-2">
+        <button type="button" name="Priority" class="btn btn-primary btn-sm btn-block">Priority</button>
+      </div>
+      <div class="mr-2">
+        <button type="button" name="Completed" class="btn btn-primary btn-sm btn-block">Completed</button>
+      </div>
+    </div>
+    <hr>
+  </form>
+  <div *ngFor="let task of tasks">
+      <app-task-edit [task]="task"></app-task-edit>
+  </div>
+
+</div>

@@ -1,0 +1,70 @@
+<div class="container-fluid">
+  <form  (ngSubmit)="save()" [formGroup]="userForm">
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">First Name:</label>
+      <div class="col-5">
+        <input type="text" class="form-control" placeholder="First Name(required)" formControlName="firstName"
+          [ngClass]="{'is-invalid': (userForm.get('firstName').touched || userForm.get('firstName').dirty) && !userForm.get('firstName').valid }" />
+        <span class="invalid-feedback">
+          <span *ngIf="userForm.get('firstName').errors?.required">
+            Please enter your first name.
+          </span>
+        </span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">Last Name:</label>
+      <div class="col-5">
+        <input type="text" class="form-control" placeholder="Last Name(required)" formControlName="lastName"
+        [ngClass]="{'is-invalid': (userForm.get('lastName').touched || userForm.get('lastName').dirty) && !userForm.get('lastName').valid }" />
+        <span class="invalid-feedback">
+            <span *ngIf="userForm.get('lastName').errors?.required">
+              Please enter your Last name.
+            </span>
+          </span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">Employee ID:</label>
+      <div class="col-5">
+        <input type="number" class="form-control" placeholder="Employee ID(required)" formControlName="empId"
+        [ngClass]="{'is-invalid': (userForm.get('empId').touched || userForm.get('empId').dirty) && !userForm.get('empId').valid }" />
+        <span class="invalid-feedback">
+            <span *ngIf="userForm.get('empId').errors?.required">
+              Please enter Employeed Id.
+            </span>
+          </span>
+      </div>
+    </div>
+    <div class="form-group row">
+      <input class="col-sm-1 btn btn-primary mx-1" type="submit" value="Add"
+      [title]="userForm.valid ? 'Save your entered data' : 'Disabled until the form data is valid'"
+            [disabled]="!userForm.valid">
+      <input class="col-sm-1 btn btn-primary mx-1" type="reset" value="Reset">
+    </div>
+  </form>
+  <hr>
+  <div class="row">
+    <div class="md-form ml-4">
+      <input type="search" [(ngModel)]="searchText" placeholder="Search text">
+    </div>
+    <div class="col-md-1">
+    </div>
+    <div class="mr-2">
+      Sort:
+    </div>
+    <div class="mr-2">
+      <button type="button" name="FirstName" class="btn btn-primary btn-sm btn-block">First Name</button>
+    </div>
+    <div class="mr-2">
+      <button type="button" name="LastName" class="btn btn-primary btn-sm btn-block">Last Name</button>
+    </div>
+    <div class="mr-2">
+      <button type="button" name="Id" class="btn btn-primary btn-sm btn-block">Id</button>
+    </div>
+  </div>
+  <hr>
+  <div *ngFor="let user of users | filter: searchText: 'firstName'">
+    <app-view-user [user]="user"></app-view-user>
+  </div>
+</div>

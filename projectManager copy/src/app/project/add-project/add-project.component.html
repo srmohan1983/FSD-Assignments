@@ -1,0 +1,136 @@
+<div class="modal" id="managerModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Select Users</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div>
+          <div class="md-form pb-2 col-md-8">
+            <input type="search" [(ngModel)]="searchText" placeholder="Search text">
+          </div>
+        </div>
+      <!-- Modal body -->
+      <div *ngFor="let user of users | filter : searchText: 'firstName'">
+        <div class="list-group" (click)="onSelectManager(user)">
+            <button type="button" id="projectName" class="btn btn-primary" class="list-group-item list-group-item-action" data-dismiss="modal">{{user.firstName}}</button>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <form [formGroup] = "projectForm">
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">Project</label>
+      <div class="col-6">
+        <input type="text" class="form-control" placeholder="Project Title(Required)" formControlName="projectTitle"
+        [ngClass]="{'is-invalid': (projectForm.get('projectTitle').touched || projectForm.get('projectTitle').dirty) && !projectForm.get('projectTitle').valid }" />
+      <span class="invalid-feedback">
+        <span *ngIf="projectForm.get('projectTitle').errors?.required">
+            Please enter Project Title
+        </span>
+      </span>
+    </div>
+    </div>
+    <div formGroupName="dateGroup">
+    <div class="form-group row">
+      <div class="col-2">
+      </div>
+      <div class="col-2">
+        <div class="form-check">
+          <label class="form-check-label">
+            <input type="checkbox" class="form-check-input" name="" id="" value="checkedValue" formControlName="dateCheckbox" (click)="dateCheckboxChecked()">
+            <p class="small">Set Start and End Date</p>
+          </label>
+        </div>
+      </div>
+      <div class="col-2">
+        <input type="date" name="StartDate" class="form-control form-control-sm" placeholder="Start Date" formControlName="startDate">
+      </div>
+      <div class="col-2">
+        <input type="date" name="EndDate" class="form-control form-control-sm" placeholder="End Date" formControlName="endDate"
+        [ngClass]="{'is-invalid': projectForm.get('dateGroup').errors }" />
+        <span class="invalid-feedback">
+          <span *ngIf="projectForm.get('dateGroup').errors?.match">
+              End Date should be greater than Start Date
+          </span>
+        </span>
+      </div>
+    </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-2">
+        <label class="col-form-label">Priority</label>
+      </div>
+      <!--       <div>
+          <label for="agitated">Agitated</label>
+          <input type="range" min="0" max="10" value="5" id="fader" class="form-control-range">
+          <label for="tired">Tired</label>
+      </div> -->
+      <div class="col-6">
+        <label for="MinPriority">0</label>
+        <input type="range" min="0" max="30" class="form-control-range" formControlName="range">
+      </div>
+      <div class="col-sm-1">
+        <label for="MaxPriority">30</label>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-2">
+        <label class="col-form-label">Manager</label>
+      </div>
+      <div class="col-5">
+        <input type="text" class="form-control" placeholder="" readonly formControlName="managerSearch">
+      </div>
+      <div>
+        <button class="btn aqua-gradient btn-rounded btn-sm my-0 nav-link" type="submit" name="Search_button"
+          data-toggle="modal" data-target="#managerModal" >Search</button>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-6">
+      </div>
+      <div class="col-sm-1">
+        <input class="btn btn-primary btn-block" type="submit" value="Add" [disabled]="!projectForm.valid">
+      </div>
+      <div class="col-sm-1">
+        <input class="btn btn-primary btn-block" type="reset" value="Reset">
+      </div>
+    </div>
+  </form>
+  <hr>
+  <div>
+    <div class="md-form pb-2 col-md-8">
+      <input type="search" [(ngModel)]="searchText" placeholder="Search text">
+    </div>
+  </div>
+  <div class="container row">
+    <div class="col-1 mr-2">
+      Sort By:
+    </div>
+    <div class="col-md-auto mr-2">
+      <button type="button" name="StartDate" class="btn btn-primary btn-sm btn-block">Start Date</button>
+    </div>
+    <div class="col-md-auto mr-2">
+      <button type="button" name="EndDate" class="btn btn-primary btn-sm btn-block">End Date</button>
+    </div>
+    <div class="col-md-auto mr-2">
+      <button type="button" name="Priority" class="btn btn-primary btn-sm btn-block">Priority</button>
+    </div>
+    <div class="col-md-auto mr-2">
+      <button type="button" name="Completed" class="btn btn-primary btn-sm btn-block">Completed</button>
+    </div>
+  </div>
+  <hr>
+  <div *ngFor="let project of projects | filter: searchText : 'Project'">
+    <app-view-project [project]="project"></app-view-project>
+  </div>
+</div>

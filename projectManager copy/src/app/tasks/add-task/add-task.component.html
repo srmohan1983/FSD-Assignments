@@ -1,0 +1,181 @@
+<div class="modal" id="projectModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Select Users</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div>
+          <div class="md-form pb-2 col-md-8">
+            <input type="search" [(ngModel)]="searchText" placeholder="Search text">
+          </div>
+        </div>
+        <!-- Modal body -->
+        <div *ngFor="let project of projects | filter : searchText: 'Project'">
+          <div class="list-group" (click)="onSelectProject(project)">
+            <button type="button" class="btn btn-primary"
+              class="list-group-item list-group-item-action" data-dismiss="modal">{{project.Project}}</button>
+          </div>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+<div class="modal" id="parentTaskModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Select Users</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div>
+        <div class="md-form pb-2 col-md-8">
+          <input type="search" [(ngModel)]="searchText" placeholder="Search text">
+        </div>
+      </div>
+      <!-- Modal body -->
+      <div *ngFor="let task of tasks | filter : searchText: 'ParentTask'">
+        <div class="list-group" (click)="onSelectTask(task)">
+          <button type="button" class="btn btn-primary"
+            class="list-group-item list-group-item-action" data-dismiss="modal">{{task.ParentTask}}</button>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="modal" id="userModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Select Users</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div>
+        <div class="md-form pb-2 col-md-8">
+          <input type="search" [(ngModel)]="searchText" placeholder="Search text">
+        </div>
+      </div>
+      <!-- Modal body -->
+      <div *ngFor="let user of users | filter : searchText: 'firstName'">
+        <div class="list-group" (click)="onSelectUser(user)">
+          <button type="button" class="btn btn-primary"
+            class="list-group-item list-group-item-action" data-dismiss="modal">{{user.firstName}}</button>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <form [formGroup] = "taskForm">
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">Project</label>
+      <div class="col-4">
+        <input type="text" class="form-control" placeholder="Project Title" readonly formControlName="projectSearch">
+      </div>
+      <div class="col-1">
+        <button type="submit" name="" id="SearchProject" class="btn btn-primary" btn-lg btn-block data-toggle="modal"
+          data-target="#projectModal">Search</button>
+      </div>
+    </div>
+    <div class="row">
+      <label class="col-sm-2 col-form-label">Task</label>
+      <div class="col-5">
+        <input type="text" class="form-control" placeholder="" formControlName="taskName"
+        [ngClass]="{'is-invalid': (taskForm.get('taskName').touched || taskForm.get('taskName').dirty) && !taskForm.get('taskName').valid }" />
+        <span class="invalid-feedback">
+            <span *ngIf="taskForm.get('taskName').errors?.required">
+                Please enter Task Name
+            </span>
+          </span>
+      </div>
+    </div>
+    <div formGroupName="parentTaskGroup">
+    <div class="row p-2">
+      <label class="col-sm-2">
+      </label>
+      <div class="form-check ml-2">
+        <input type="checkbox" class="form-check-input" name="" id="" value="checkedValue" formControlName="parentTaskCheckbox" (click)="parentCheckboxChecked()">
+        Parent Task
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-2">
+        <label class="col-form-label">Priority</label>
+      </div>
+      <div class="col-5">
+        <label for="MinPriority">0</label>
+        <input type="range" min="0" max="30" class="form-control-range" formControlName="priorityRange">
+      </div>
+      <div class="col-1">
+        <label for="MaxPriority">30</label>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">Parent Task</label>
+      <div class="col-4">
+        <input type="text" class="form-control" placeholder="" readonly formControlName="parentTaskInput" >
+      </div>
+      <div class="col-1">
+        <input class="btn btn-primary btn-block" type="submit" value="Search" data-toggle="modal"
+          data-target="#parentTaskModal" formControlName="parentTaskSearch" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">Start Date</label>
+      <div class="col-2">
+        <input type="date" name="StartDate" class="form-control form-control-sm" placeholder="Start Date" formControlName="startDate">
+      </div>
+      <label class="col-sm-1 col-form-label">End Date</label>
+      <div class="col-2">
+        <input type="date" name="EndDate" class="form-control form-control-sm" placeholder="End Date" formControlName="endDate"
+        [ngClass]="{'is-invalid': taskForm.get('parentTaskGroup').errors }" />
+        <span class="invalid-feedback">
+            <span *ngIf="taskForm.get('parentTaskGroup').errors?.match">
+                End Date should be greater than Start Date
+            </span>
+          </span>
+      </div>
+    </div>
+  </div>
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label">User</label>
+      <div class="col-4">
+        <input type="text" class="form-control" placeholder="" readonly formControlName="userSearch">
+      </div>
+      <div class="col-1">
+        <button type="submit" name="" id="SearchUserTask" class="btn btn-primary" btn-lg btn-block data-toggle="modal"
+          data-target="#userModal">Search</button>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-5">
+      </div>
+      <div class="col-sm-1">
+        <input class="btn btn-primary btn-block" type="submit" value="Add" [disabled]="!taskForm.valid">
+      </div>
+      <div class="col-sm-1">
+        <input class="btn btn-primary btn-block" type="reset" value="Reset">
+      </div>
+    </div>
+  </form>
+</div>

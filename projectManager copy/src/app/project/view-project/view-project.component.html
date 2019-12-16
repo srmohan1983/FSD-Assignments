@@ -1,0 +1,32 @@
+<div class="row">
+  <div class='col-md-6 d-flex'>
+    <div class="col-md-9">
+      <ul class="list-group">
+        <li class="list-group-item">
+          Project: {{project.Project}}
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          No. Of Tasks: {{project.TotalTasks}}
+          <span>Completed: {{project.CompletedTasks}}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          Start Date: {{project.StartDate | date}}
+          <span>End Date: {{project.EndDate | date}}</span>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-3">
+        Priority: {{project.Priority}}
+    </div>
+  </div>
+  <div class="col">
+    <div class="col-md-3 mb-2">
+      <button type="button" name="UpdateProject" class="btn btn-primary btn-sm btn-block"
+        (click)=handleUpdate()>Update</button>
+    </div>
+    <div class="col-md-3 mb-2">
+      <button type="button" name="SuspendProject" class="btn btn-primary btn-sm btn-block">Suspend</button>
+    </div>
+  </div>
+</div>
+<hr>
