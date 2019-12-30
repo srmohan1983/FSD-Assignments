@@ -8,6 +8,13 @@ import {
   Validators,
   AbstractControl
 } from "@angular/forms";
+import { ProjectService } from 'src/app/project.service';
+import { HttpClient } from '@angular/common/http';
+import { Router, ActivatedRoute } from '@angular/router';
+import { DatePipe } from '@angular/common';
+import { ParentTask } from 'src/app/model/parentTask.model';
+import { EditTaskResponse } from 'src/app/model/editTaskResponse';
+
 
 function dateCompare(c: AbstractControl): { [key: string]: boolean } | null {
   const startDate = c.get("startDate");
@@ -24,106 +31,30 @@ function dateCompare(c: AbstractControl): { [key: string]: boolean } | null {
   styleUrls: ["./add-task.component.css"]
 })
 export class AddTaskComponent implements OnInit {
-  projects: Project[] = [
-    {
-      Project: "Trace1",
-      TotalTasks: "25",
-      CompletedTasks: "10",
-      StartDate: "2019-12-01",
-      EndDate: "2019-12-31",
-      Priority: "30"
-    },
-    {
-      Project: "Trace2",
-      TotalTasks: "35",
-      CompletedTasks: "5",
-      StartDate: "2019-11-01",
-      EndDate: "2019-11-31",
-      Priority: "25"
-    },
-    {
-      Project: "Trace3",
-      TotalTasks: "15",
-      CompletedTasks: "2",
-      StartDate: "2019-10-01",
-      EndDate: "2019-10-31",
-      Priority: "20"
-    },
-    {
-      Project: "Trace4",
-      TotalTasks: "10",
-      CompletedTasks: "1",
-      StartDate: "2019-09-01",
-      EndDate: "2019-09-31",
-      Priority: "30"
-    },
-    {
-      Project: "Trace5",
-      TotalTasks: "50",
-      CompletedTasks: "10",
-      StartDate: "2019-08-01",
-      EndDate: "2019-08-31",
-      Priority: "25"
-    }
-  ];
 
-  users: User[] = [
-    {
-      firstName: "Mohan",
-      lastName: "Kumar",
-      employeeId: "101"
-    },
-    { firstName: "Preetha", lastName: "Raman", employeeId: "102" },
-    {
-      firstName: "Adhvik",
-      lastName: "Mohan",
-      employeeId: "103"
-    },
-    {
-      firstName: "Susila",
-      lastName: "Rengaswamy",
-      employeeId: "104"
-    },
-    {
-      firstName: "Rengaswamy",
-      lastName: "Ramasamy",
-      employeeId: "105"
-    }
-  ];
-
-  tasks: Task[] = [
-    {
-      Project: "Trace1",
-      Task: "Dev1",
-      Priority: "10",
-      ParentTask: "Coding"
-    },
-    {
-      Project: "Trace1",
-      Task: "Dev2",
-      Priority: "20",
-      ParentTask: "Coding"
-    },
-    {
-      Project: "Trace1",
-      Task: "Dev3",
-      Priority: "30",
-      ParentTask: "Coding"
-    },
-    {
-      Project: "Trace1",
-      Task: "Dev4",
-      Priority: "40",
-      ParentTask: "Coding"
-    }
-  ];
-
+  id: number;
+  oldUserID: number;
   taskForm: FormGroup;
-  constructor(private fb: FormBuilder) {}
+  users: any = [];
+  projects: any=[];
+  tasks: any[];
+  parentTasks: any=[];
+  newTask: Task = new Task();
+  selProject: Project = new Project();
+  parentTask: ParentTask = new ParentTask();
+  userAssigned: User = new User();
+  editTask: EditTaskResponse = new EditTaskResponse();
+  constructor(private fb: FormBuilder,
+    private projectService: ProjectService,
+              private http: HttpClient,
+              private router: Router,
+              private datepipe: DatePipe,
+              private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.taskForm = this.fb.group({
-      projectSearch: ["", [Validators.required]],
+      projectInput: ["", [Validators.required]],
+      projectSearch: ["Search"],
       taskName: ["", [Validators.required]],
       userSearch: [""],
       parentTaskGroup: this.fb.group(
@@ -138,21 +69,117 @@ export class AddTaskComponent implements OnInit {
         { validator: dateCompare }
       )
     });
+
+    this.id = this.route.snapshot.params['id'];
+    console.log("Router Snapshot Param " + this.id);
+    if (this.id != null) {
+      this.projectService.getTasksById(this.id).subscribe(
+        data => {
+          console.log(data);
+          this.editTask = data;
+          console.log("edittask Response Object " + JSON.stringify(this.editTask));
+          this.setTaskForm(this.editTask);
+          this.loadUsers();
+        },
+        error => console.log(error)
+      );
+    }
+
+    if (this.id == null) {
+      console.log("Id is null");
+      this.loadProjects();
+      this.loadUsers();
+      this.loadTasks();
+      this.loadParentTasks();
+    };
+
+  }
+
+
+  loadProjects() {
+    this.projectService.getProjects().subscribe(
+      data => {
+        console.log(data);
+        this.projects = data;
+      },
+      error => console.log(error)
+    );
+  }
+
+  loadUsers() {
+    this.projectService.getUsers().subscribe(
+      data => {
+        console.log(data);
+        this.users = data;
+      },
+      error => console.log(error)
+    );
+  }
+
+  loadTasks() {
+    this.projectService.getTasks().subscribe(
+      data => {
+        console.log(data);
+        this.tasks = data;
+      },
+      error => console.log(error)
+    );
+  }
+
+  loadParentTasks() {
+    this.projectService.getParentTasks().subscribe(
+      data => {
+        console.log(data);
+        this.parentTasks = data;
+      },
+      error => console.log(error)
+    );
+  }
+
+  setTaskForm(editTask: EditTaskResponse): void {
+    const projectFormInputControl = this.taskForm.get("projectInput");
+    const projectFormSearchControl = this.taskForm.get("projectSearch");
+    const taskNameControl = this.taskForm.get("taskName");
+    const parentCheckboxControl = this.taskForm.get(
+      "parentTaskGroup.parentTaskCheckbox"
+    );
+    const priorityRangeControl = this.taskForm.get("parentTaskGroup.priorityRange");
+    const parentTaskFormControl = this.taskForm.get("parentTaskGroup.parentTaskInput");
+    const parentTaskSearchControl = this.taskForm.get("parentTaskGroup.parentTaskSearch");
+    const startDateControl = this.taskForm.get("parentTaskGroup.startDate");
+    const endDateControl = this.taskForm.get("parentTaskGroup.endDate");
+    const userFormControl = this.taskForm.get("userSearch");
+
+    projectFormInputControl.setValue(this.editTask.projectTitle);
+    projectFormSearchControl.disable();
+    taskNameControl.setValue(this.editTask.task);
+    parentCheckboxControl.disable();
+    priorityRangeControl.setValue(this.editTask.priority);
+    parentTaskFormControl.setValue(this.editTask.parentTask);
+    parentTaskSearchControl.disable();
+    startDateControl.setValue(this.datepipe.transform(this.editTask.startDate, 'yyyy-MM-dd'));
+    endDateControl.setValue(this.datepipe.transform(this.editTask.endDate, 'yyyy-MM-dd'));
+    userFormControl.setValue(this.editTask.firstName + this.editTask.lastName);
   }
 
   onSelectProject(project: Project): void {
-    const projectFormControl = this.taskForm.get("projectSearch");
-    projectFormControl.setValue(project.Project);
+    const projectFormInputControl = this.taskForm.get("projectInput");
+    projectFormInputControl.setValue(project.projectTitle);
+    this.selProject.projectID = project.projectID;
+
   }
 
-  onSelectTask(task: Task): void {
+  onSelectTask(modalParentTask: ParentTask): void {
     const parentTaskFormControl = this.taskForm.get("parentTaskGroup.parentTaskInput");
-    parentTaskFormControl.setValue(task.ParentTask);
+    console.log("Modal Control Parent Task" + modalParentTask.parentTask);
+    parentTaskFormControl.setValue(modalParentTask.parentTask);
+    this.parentTask.parentID = modalParentTask.parentID;
   }
 
   onSelectUser(user: User): void {
     const userFormControl = this.taskForm.get("userSearch");
     userFormControl.setValue(user.firstName);
+    this.userAssigned.userID = user.userID;
   }
 
   parentCheckboxChecked() {
@@ -164,6 +191,7 @@ export class AddTaskComponent implements OnInit {
     const parentTaskFormControl = this.taskForm.get("parentTaskGroup.parentTaskInput");
     const parentTaskSearchControl = this.taskForm.get("parentTaskGroup.parentTaskSearch");
     const priorityRangeControl = this.taskForm.get("parentTaskGroup.priorityRange");
+    const taskNameControl = this.taskForm.get("taskName");
     startDateControl.disable();
     endDateControl.disable();
     startDateControl.setValue("");
@@ -171,6 +199,7 @@ export class AddTaskComponent implements OnInit {
     parentTaskFormControl.setValue("");
     parentTaskSearchControl.disable();
     priorityRangeControl.disable();
+    this.parentTask.parentTask = taskNameControl.value;
     if (parentCheckboxControl.value) {
       startDateControl.enable();
       endDateControl.enable();
@@ -181,6 +210,74 @@ export class AddTaskComponent implements OnInit {
       const next = nextDate.toISOString().substring(0, 10);
       endDateControl.setValue(next);
       startDateControl.setValue(currentDate);
+    }
+  }
+
+  save() {
+    console.log(this.taskForm);
+    console.log('Saved: ' + this.taskForm.value);
+    const parentCheckboxControl = this.taskForm.get(
+      "parentTaskGroup.parentTaskCheckbox"
+    );
+    const taskNameControl = this.taskForm.get("taskName");
+    const startDateControl = this.taskForm.get("parentTaskGroup.startDate");
+    const endDateControl = this.taskForm.get("parentTaskGroup.endDate");
+    //const parentTaskFormControl = this.taskForm.get("parentTaskGroup.parentTaskInput");
+    //const parentTaskSearchControl = this.taskForm.get("parentTaskGroup.parentTaskSearch");
+    const priorityRangeControl = this.taskForm.get("parentTaskGroup.priorityRange");
+    this.parentTask.parentTask = taskNameControl.value;
+    if (parentCheckboxControl.value && this.id == null) {
+      console.log("Inside Parent Task Creation Submit Method ");
+     this.http
+      .post('/api/v1/projectmanager/tasks/createParentTask', this.parentTask)
+      .subscribe(response => {
+        console.log('response ', response);
+        this.loadProjects();
+        this.loadUsers();
+        this.loadTasks();
+        this.loadParentTasks();
+        this.taskForm.reset();
+      });
+    } else if (this.id == null) {
+      console.log("Inside New Task Creation Submit Method ");
+        this.newTask.task = taskNameControl.value;
+        this.newTask.startDate = startDateControl.value;
+        this.newTask.endDate = endDateControl.value;
+        this.newTask.priority = priorityRangeControl.value;
+        this.newTask.project = this.selProject;
+        this.newTask.parent = this.parentTask;
+        this.newTask.user = this.userAssigned;
+        this.http
+      .post('/api/v1/projectmanager/tasks/createTask', this.newTask)
+      .subscribe(response => {
+        console.log('response ', response);
+        this.loadProjects();
+        this.loadUsers();
+        this.loadTasks();
+        this.loadParentTasks();
+        this.taskForm.reset();
+      });
+    }
+    else {
+      console.log("Editing Tasksssss..." + this.id);
+      this.newTask.task = taskNameControl.value;
+      this.newTask.startDate = startDateControl.value;
+      this.newTask.endDate = endDateControl.value;
+      this.newTask.priority = priorityRangeControl.value;
+      this.newTask.user = this.userAssigned;
+      this.newTask.taskID = this.id;
+      this.oldUserID = this.editTask.userID;
+      console.log("Edit Task JSON " + JSON.stringify(this.newTask));
+       this.projectService.editTask(this.oldUserID, this.newTask)
+      .subscribe(response => {
+        console.log('response ', response);
+        this.loadProjects();
+        this.loadUsers();
+        this.loadTasks();
+        this.loadParentTasks();
+        this.taskForm.reset();
+      });
+
     }
   }
 }

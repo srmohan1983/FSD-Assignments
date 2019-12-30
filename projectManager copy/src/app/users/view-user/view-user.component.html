@@ -8,7 +8,7 @@
         {{user.lastName}}
       </li>
       <li class="list-group-item list-group-item-light">
-        {{user.employeeId}}
+        {{user.employeeID}}
       </li>
     </ul>
   </div>
@@ -18,7 +18,7 @@
     </div>
 
     <div class="col-md-3 mb-2">
-      <button type="button" name="Edit" class="btn btn-primary btn-sm btn-block">Delete</button>
+      <button type="button" name="Edit" class="btn btn-primary btn-sm btn-block" (click)=deleteUser(user.userID)>Delete</button>
     </div>
   </div>
 </div>

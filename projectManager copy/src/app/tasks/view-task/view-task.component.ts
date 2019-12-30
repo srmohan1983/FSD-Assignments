@@ -2,97 +2,72 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Project } from 'src/app/model/project.model';
 import { Task } from 'src/app/model/task.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ProjectService } from 'src/app/project.service';
+import { HttpClient } from '@angular/common/http';
+import { Router, ActivatedRoute } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-view-task',
   templateUrl: './view-task.component.html',
   styleUrls: ['./view-task.component.css']
 })
-export class ViewTaskComponent implements OnInit {
+export class ViewTaskComponent implements OnInit  {
 
-  projects: Project[] = [
-    {
-      Project: "Trace1",
-      TotalTasks: "25",
-      CompletedTasks: "10",
-      StartDate: "2019-12-01",
-      EndDate: "2019-12-31",
-      Priority: "30"
-    },
-    {
-      Project: "Trace2",
-      TotalTasks: "35",
-      CompletedTasks: "5",
-      StartDate: "2019-11-01",
-      EndDate: "2019-11-31",
-      Priority: "25"
-    },
-    {
-      Project: "Trace3",
-      TotalTasks: "15",
-      CompletedTasks: "2",
-      StartDate: "2019-10-01",
-      EndDate: "2019-10-31",
-      Priority: "20"
-    },
-    {
-      Project: "Trace4",
-      TotalTasks: "10",
-      CompletedTasks: "1",
-      StartDate: "2019-09-01",
-      EndDate: "2019-09-31",
-      Priority: "30"
-    },
-    {
-      Project: "Trace5",
-      TotalTasks: "50",
-      CompletedTasks: "10",
-      StartDate: "2019-08-01",
-      EndDate: "2019-08-31",
-      Priority: "25"
-    }
-  ];
-
-
-  tasks: Task[] = [
-    {
-      Project:"Trace5",
-      Task: "T1-Transformation",
-      ParentTask: "Analysis",
-      Priority:"5"
-      //StartDate: "2019-12-01",
-      //EndDate: "2019-12-31"
-    },
-    {
-      Project:"Trace5",
-      Task: "T2-Transformation",
-      ParentTask: "Analysis",
-      Priority:"10"
-      //StartDate: "2019-06-01",
-      //EndDate: "2019-10-31"},
-    },
-    {
-      Project:"Trace5",
-      Task: "T3-Transformation",
-      ParentTask: "Development",
-      Priority:"25"
-      //StartDate: "2019-02-01",
-      //EndDate: "2019-05-31"
-    }
-  ];
-
+  id: number;
   viewTaskForm: FormGroup;
-  constructor(private fb: FormBuilder) { }
+  projects: any=[];
+  tasks: any[];
+  selProject: Project = new Project();
+  respTask: any=[];
+  constructor(private route: ActivatedRoute,private fb: FormBuilder,
+    private projectService: ProjectService,
+              private http: HttpClient,
+              private router: Router,
+              private datepipe: DatePipe) { }
 
   ngOnInit() {
     this.viewTaskForm = this.fb.group({
       projectSearch: ["", [Validators.required]]
     });
+    this.loadProjects();
   }
 
-  onSelectProject(project: Project): void {
+
+  loadProjects() {
+    this.projectService.getProjects().subscribe(
+      data => {
+        console.log(data);
+        this.projects = data;
+      },
+      error => console.log(error)
+    );
+  }
+
+  loadTasks() {
+    this.projectService.getTasks().subscribe(
+      data => {
+        console.log(data);
+        this.tasks = data;
+      },
+      error => console.log(error)
+    );
+  }
+
+   onSelectProject(project: Project): void {
     const projectFormControl = this.viewTaskForm.get("projectSearch");
-    projectFormControl.setValue(project.Project);
+    projectFormControl.setValue(project.projectTitle);
+    this.selProject.projectID = project.projectID;
+    //this.id = this.route.snapshot.params['id'];
+
+    this.projectService.getProjectById(this.selProject.projectID)
+      .subscribe(data => {
+        console.log("Data before Service Call" + data)
+        this.respTask = data;
+        console.log(" Data Json " + JSON.stringify(data));
+        console.log(" Resp Task ID " + this.respTask.taskID);
+      }, error => console.log(error));
+
   }
 
 }

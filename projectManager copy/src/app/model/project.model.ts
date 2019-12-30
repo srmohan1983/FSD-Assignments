@@ -1,10 +1,14 @@
+import { Task } from './task.model';
+import { User } from './user.model';
+
 export class Project {
 
-  Project: string;
-  TotalTasks: string;
-  CompletedTasks: string;
-  StartDate: string;
-  EndDate: string;
-  Priority: string;
+  projectID: number;
+  projectTitle: string;
+  startDate: Date;
+  endDate: Date;
+  priority: number;
+  TaskRecords: Task;
+  userRecords: Array<User> = [];
 
 }

@@ -2,7 +2,7 @@ import { Project } from './project.model';
 import { ParentTask } from './parentTask.model';
 import { User } from './user.model';
 
-export class Task {
+export class EditTaskRequest {
 
   taskID: number;
   task: string;
@@ -13,5 +13,6 @@ export class Task {
   project: Project;
   parent: ParentTask;
   user: User;
+  oldUserId: number;
 
 }

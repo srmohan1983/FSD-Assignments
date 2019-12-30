@@ -14,6 +14,9 @@ import { SearchModalComponent } from './project/search-modal/search-modal.compon
 import { AddTaskComponent } from './tasks/add-task/add-task.component';
 import { ViewTaskComponent } from './tasks/view-task/view-task.component';
 import { TaskEditComponent } from './tasks/view-task/task-edit/task-edit.component';
+import { HttpClientModule } from '@angular/common/http';
+import { SortByPipe } from './sort-by.pipe';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -26,15 +29,17 @@ import { TaskEditComponent } from './tasks/view-task/task-edit/task-edit.compone
     SearchModalComponent,
     AddTaskComponent,
     ViewTaskComponent,
-    TaskEditComponent
+    TaskEditComponent,
+    SortByPipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

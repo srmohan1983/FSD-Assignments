@@ -13,11 +13,13 @@
           </div>
         </div>
       <!-- Modal body -->
+
       <div *ngFor="let user of users | filter : searchText: 'firstName'">
         <div class="list-group" (click)="onSelectManager(user)">
-            <button type="button" id="projectName" class="btn btn-primary" class="list-group-item list-group-item-action" data-dismiss="modal">{{user.firstName}}</button>
+            <button type="button" id="projectName" class="btn btn-primary" class="list-group-item list-group-item-action" data-dismiss="modal">{{user.firstName}} {{user.lastName}}</button>
         </div>
       </div>
+
       <!-- Modal footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -27,7 +29,7 @@
   </div>
 </div>
 <div class="container-fluid">
-  <form [formGroup] = "projectForm">
+  <form (ngSubmit)="save()" [formGroup] = "projectForm">
     <div class="form-group row">
       <label class="col-sm-2 col-form-label">Project</label>
       <div class="col-6">
@@ -91,7 +93,7 @@
         <input type="text" class="form-control" placeholder="" readonly formControlName="managerSearch">
       </div>
       <div>
-        <button class="btn aqua-gradient btn-rounded btn-sm my-0 nav-link" type="submit" name="Search_button"
+        <button class="btn aqua-gradient btn-rounded btn-sm my-0 nav-link" type="button" name="Search_button"
           data-toggle="modal" data-target="#managerModal" >Search</button>
       </div>
     </div>
@@ -99,7 +101,7 @@
       <div class="col-6">
       </div>
       <div class="col-sm-1">
-        <input class="btn btn-primary btn-block" type="submit" value="Add" [disabled]="!projectForm.valid">
+        <input class="btn btn-primary btn-block" type="submit" [value]="(updatedProject.project?.projectID != null || updatedProject.project?.projectID != undefined) ? 'Update' : 'Add'" [disabled]="!projectForm.valid">
       </div>
       <div class="col-sm-1">
         <input class="btn btn-primary btn-block" type="reset" value="Reset">
@@ -130,7 +132,7 @@
     </div>
   </div>
   <hr>
-  <div *ngFor="let project of projects | filter: searchText : 'Project'">
-    <app-view-project [project]="project"></app-view-project>
+  <div *ngFor="let project of projects | filter: searchText : 'projectTitle'">
+    <app-view-project [project]="project" (updateProject)="onUpdate($event)"></app-view-project>
   </div>
 </div>

@@ -1,6 +1,8 @@
 export class User {
-
+  userID: number;
   firstName: string;
   lastName: string;
-  employeeId: string;
+  employeeID: string;
+  task: number;
+  projectid: number;
 }

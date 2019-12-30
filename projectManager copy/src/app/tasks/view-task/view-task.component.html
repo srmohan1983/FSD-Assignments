@@ -12,7 +12,7 @@
       <div *ngFor="let project of projects | filter : searchText: 'Project'">
           <div class="list-group" (click)="onSelectProject(project)">
             <button type="button" class="btn btn-primary"
-              class="list-group-item list-group-item-action" data-dismiss="modal">{{project.Project}}</button>
+              class="list-group-item list-group-item-action" data-dismiss="modal">{{project.projectTitle}}</button>
           </div>
         </div>
 
@@ -32,7 +32,7 @@
         <input type="text" class="form-control" placeholder="Project Title" readonly formControlName="projectSearch">
       </div>
       <div class="col-1">
-        <button type="submit" name="" id="SearchProject" class="btn btn-primary" btn-lg btn-block data-toggle="modal"
+        <button type="button" name="" id="SearchProject" class="btn btn-primary" btn-lg btn-block data-toggle="modal"
           data-target="#parentTaskModal">Search</button>
       </div>
       <div class="mr-2">
@@ -53,8 +53,8 @@
     </div>
     <hr>
   </form>
-  <div *ngFor="let task of tasks">
+  <div *ngFor="let task of respTask">
       <app-task-edit [task]="task"></app-task-edit>
-  </div>
+    </div>
 
 </div>

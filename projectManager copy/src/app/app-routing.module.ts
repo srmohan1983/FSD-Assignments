@@ -12,7 +12,7 @@ const routes: Routes = [{ path: 'addUser', component: AddUserComponent },
 { path: 'addProject/searchModal', component: SearchModalComponent },
 { path: 'addTask', component: AddTaskComponent },
 { path: 'viewTask', component: ViewTaskComponent },
-{ path: 'viewTask/addTask', component: AddTaskComponent }
+{ path: 'addTask/:id', component: AddTaskComponent }
  ];
 
 @NgModule({

@@ -16,7 +16,7 @@
         <div *ngFor="let project of projects | filter : searchText: 'Project'">
           <div class="list-group" (click)="onSelectProject(project)">
             <button type="button" class="btn btn-primary"
-              class="list-group-item list-group-item-action" data-dismiss="modal">{{project.Project}}</button>
+              class="list-group-item list-group-item-action" data-dismiss="modal">{{project.projectTitle}}</button>
           </div>
         </div>
         <!-- Modal footer -->
@@ -42,10 +42,10 @@
         </div>
       </div>
       <!-- Modal body -->
-      <div *ngFor="let task of tasks | filter : searchText: 'ParentTask'">
-        <div class="list-group" (click)="onSelectTask(task)">
+      <div *ngFor="let parentTask of parentTasks | filter : searchText: 'ParentTask'">
+        <div class="list-group" (click)="onSelectTask(parentTask)">
           <button type="button" class="btn btn-primary"
-            class="list-group-item list-group-item-action" data-dismiss="modal">{{task.ParentTask}}</button>
+            class="list-group-item list-group-item-action" data-dismiss="modal">{{parentTask.parentTask}}</button>
         </div>
       </div>
       <!-- Modal footer -->
@@ -74,7 +74,7 @@
       <div *ngFor="let user of users | filter : searchText: 'firstName'">
         <div class="list-group" (click)="onSelectUser(user)">
           <button type="button" class="btn btn-primary"
-            class="list-group-item list-group-item-action" data-dismiss="modal">{{user.firstName}}</button>
+            class="list-group-item list-group-item-action" data-dismiss="modal">{{user.firstName}} {{user.lastName}}</button>
         </div>
       </div>
       <!-- Modal footer -->
@@ -86,16 +86,16 @@
   </div>
 </div>
 <div class="container-fluid">
-  <form [formGroup] = "taskForm">
+  <form [formGroup] = "taskForm" (ngSubmit)="save()">
     <div class="form-group row">
       <label class="col-sm-2 col-form-label">Project</label>
       <div class="col-4">
-        <input type="text" class="form-control" placeholder="Project Title" readonly formControlName="projectSearch">
+        <input type="text" class="form-control" placeholder="Project Title" readonly formControlName="projectInput">
       </div>
       <div class="col-1">
-        <button type="submit" name="" id="SearchProject" class="btn btn-primary" btn-lg btn-block data-toggle="modal"
-          data-target="#projectModal">Search</button>
-      </div>
+          <input class="btn btn-primary btn-block" type="button" value="Search" data-toggle="modal"
+            data-target="#projectModal" formControlName="projectSearch" />
+        </div>
     </div>
     <div class="row">
       <label class="col-sm-2 col-form-label">Task</label>
@@ -136,7 +136,7 @@
         <input type="text" class="form-control" placeholder="" readonly formControlName="parentTaskInput" >
       </div>
       <div class="col-1">
-        <input class="btn btn-primary btn-block" type="submit" value="Search" data-toggle="modal"
+        <input class="btn btn-primary btn-block" type="button" value="Search" data-toggle="modal"
           data-target="#parentTaskModal" formControlName="parentTaskSearch" />
       </div>
     </div>
@@ -163,7 +163,7 @@
         <input type="text" class="form-control" placeholder="" readonly formControlName="userSearch">
       </div>
       <div class="col-1">
-        <button type="submit" name="" id="SearchUserTask" class="btn btn-primary" btn-lg btn-block data-toggle="modal"
+        <button type="button" name="" id="SearchUserTask" class="btn btn-primary" btn-lg btn-block data-toggle="modal"
           data-target="#userModal">Search</button>
       </div>
     </div>
@@ -171,7 +171,7 @@
       <div class="col-5">
       </div>
       <div class="col-sm-1">
-        <input class="btn btn-primary btn-block" type="submit" value="Add" [disabled]="!taskForm.valid">
+        <input class="btn btn-primary btn-block" type="submit" [value]="(editTask.taskID != null || editTask.taskID != undefined) ? 'Update' : 'Add'" [disabled]="!taskForm.valid">
       </div>
       <div class="col-sm-1">
         <input class="btn btn-primary btn-block" type="reset" value="Reset">
@@ -179,3 +179,4 @@
     </div>
   </form>
 </div>
+

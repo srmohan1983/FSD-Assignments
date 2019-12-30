@@ -3,20 +3,20 @@
     <div class="col-md-9">
       <ul class="list-group">
         <li class="list-group-item">
-          Project: {{project.Project}}
+          Project: {{project.project.projectTitle}}
         </li>
         <li class="list-group-item d-flex justify-content-between">
-          No. Of Tasks: {{project.TotalTasks}}
-          <span>Completed: {{project.CompletedTasks}}</span>
+          No. Of Tasks: {{project.tasksCount}}
+          <span>Completed: {{project.completedTasksCount}}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between">
-          Start Date: {{project.StartDate | date}}
-          <span>End Date: {{project.EndDate | date}}</span>
+          Start Date: {{project.project.startDate | date}}
+          <span>End Date: {{project.project.endDate | date}}</span>
         </li>
       </ul>
     </div>
     <div class="col-md-3">
-        Priority: {{project.Priority}}
+        Priority: {{project.project.priority}}
     </div>
   </div>
   <div class="col">
