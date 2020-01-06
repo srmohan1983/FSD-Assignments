@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ProjectService } from 'src/app/project.service';
 import { DatePipe } from '@angular/common';
 import { ProjectsResponse } from 'src/app/model/projectsResponse';
+import { ToastrService } from 'src/app/common/toastr.service';
 
 function dateCompare(c: AbstractControl): {[key : string]: boolean} | null {
 
@@ -39,7 +40,8 @@ export class AddProjectComponent implements OnInit {
               private projectService: ProjectService,
               private http: HttpClient,
               private router: Router,
-              private datepipe: DatePipe) { }
+              private datepipe: DatePipe,
+              private toastr:ToastrService) { }
 
 
   ngOnInit() {
@@ -125,10 +127,12 @@ export class AddProjectComponent implements OnInit {
       .post('/api/v1/projectmanager/createProject', this.newProject)
       .subscribe(response => {
         console.log('response ', response);
+        this.toastr.success("Project Created");
         this.loadProjects();
         this.loadUsers();
         this.projectForm.reset();
-      });
+      },
+      (error => this.toastr.error("Error.Check Logs")));
   } else {
      console.log('Update Button Submit Action' + this.updatedProject.project.projectID);
      const projectTitleControl = this.projectForm.get('projectTitle');
@@ -143,14 +147,16 @@ export class AddProjectComponent implements OnInit {
      console.log("Passed in Project Rec for Update" + JSON.stringify(this.updatedProjectRec));
 
      this.projectService.editProject(this.updatedProject.project.projectID, this.updatedProjectRec)
-      .subscribe(response => console.log(response), error => console.log(error));
+      .subscribe(response => { console.log(response);
+        this.toastr.success("Project Updated");
      this.projectForm.reset();
      this.loadProjects();
      this.loadUsers();
      this.updatedProject = new ProjectsResponse();
-   }
-
+   }, (error => this.toastr.error("Error.Check Logs")));
   }
+}
+
 
   onUpdate(updatedProject: ProjectsResponse): void {
     console.log("Emitted Event from Update Button" + JSON.stringify(updatedProject));
@@ -174,7 +180,47 @@ export class AddProjectComponent implements OnInit {
     console.log("Updated Project ProjectID" + updatedProject.project.projectID);
   }
 
+  sortByStartDate(){
+    this.projects.sort(sortByStartDate);
+  };
+
+  sortByEndDate(){
+    this.projects.sort(sortByEndDate);
+  };
+
+  sortByPriority(){
+    this.projects.sort(sortByPriority);
+  };
+
+  sortByTasksCompleted(){
+    this.projects.sort(sortByTasksCompleted);
+  };
 
 
 
+}
+
+function sortByStartDate(s1: ProjectsResponse, s2: ProjectsResponse) {
+  if (s1.project.startDate > s2.project.startDate ) return 1
+  else if(s1.project.startDate === s2.project.startDate ) return 0
+  else return -1
+}
+
+
+function sortByEndDate(s1: ProjectsResponse, s2: ProjectsResponse) {
+  if (s1.project.endDate > s2.project.endDate ) return 1
+  else if(s1.project.endDate === s2.project.endDate ) return 0
+  else return -1
+}
+
+function sortByPriority(s1: ProjectsResponse, s2: ProjectsResponse) {
+  if (s1.project.priority > s2.project.priority ) return 1
+  else if(s1.project.priority === s2.project.priority ) return 0
+  else return -1
+}
+
+function sortByTasksCompleted(s1: ProjectsResponse, s2: ProjectsResponse) {
+  if (s1.completedTasksCount > s2.completedTasksCount ) return 1
+  else if(s1.completedTasksCount === s2.completedTasksCount ) return 0
+  else return -1
 }

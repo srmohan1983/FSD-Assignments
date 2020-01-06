@@ -11,6 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AddProjectComponent } from './project/add-project/add-project.component';
 import { ViewProjectComponent } from './project/view-project/view-project.component';
 import { SearchModalComponent } from './project/search-modal/search-modal.component';
+import { ToastrService } from './common/toastr.service';
 import { AddTaskComponent } from './tasks/add-task/add-task.component';
 import { ViewTaskComponent } from './tasks/view-task/view-task.component';
 import { TaskEditComponent } from './tasks/view-task/task-edit/task-edit.component';
@@ -39,7 +40,7 @@ import { DatePipe } from '@angular/common';
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [DatePipe],
+  providers: [DatePipe,ToastrService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

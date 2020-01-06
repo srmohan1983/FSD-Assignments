@@ -3,6 +3,7 @@ import { ProjectService } from 'src/app/project.service';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { Router } from '@angular/router';
 import { User } from 'src/app/model/user.model';
+import { ToastrService } from 'src/app/common/toastr.service';
 
 @Component({
   selector: 'app-view-user',
@@ -15,7 +16,8 @@ export class ViewUserComponent implements OnInit {
   @Output() editUser = new EventEmitter<User>();
 
   constructor(private projectService: ProjectService,
-    private router: Router) { }
+    private router: Router,
+    private toastr:ToastrService) { }
 
   ngOnInit() {
   }
@@ -40,10 +42,11 @@ export class ViewUserComponent implements OnInit {
       .subscribe(
         data => {
           console.log(data);
+          this.toastr.success("User Deleted");
           this.loadUsers();
 
         },
-        error => console.log(error));
+        (error => this.toastr.error("Error.Check Logs")));
   }
 
 }

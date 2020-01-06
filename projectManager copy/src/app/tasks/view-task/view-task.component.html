@@ -12,7 +12,7 @@
       <div *ngFor="let project of projects | filter : searchText: 'Project'">
           <div class="list-group" (click)="onSelectProject(project)">
             <button type="button" class="btn btn-primary"
-              class="list-group-item list-group-item-action" data-dismiss="modal">{{project.projectTitle}}</button>
+              class="list-group-item list-group-item-action" data-dismiss="modal">{{project.project.projectTitle}}</button>
           </div>
         </div>
 
@@ -39,22 +39,22 @@
         Sort By:
       </div>
       <div class="mr-2">
-        <button type="button" name="StartDate" class="btn btn-primary btn-sm btn-block">Start Date</button>
+        <button type="button" name="StartDate" class="btn btn-primary btn-sm btn-block" (click)="sortByStartDate()">Start Date</button>
       </div>
       <div class="mr-2">
-        <button type="button" name="EndDate" class="btn btn-primary btn-sm btn-block">End Date</button>
+        <button type="button" name="EndDate" class="btn btn-primary btn-sm btn-block" (click)="sortByEndDate()">End Date</button>
       </div>
       <div class="mr-2">
-        <button type="button" name="Priority" class="btn btn-primary btn-sm btn-block">Priority</button>
+        <button type="button" name="Priority" class="btn btn-primary btn-sm btn-block" (click)="sortByPriority()">Priority</button>
       </div>
       <div class="mr-2">
-        <button type="button" name="Completed" class="btn btn-primary btn-sm btn-block">Completed</button>
+        <button type="button" name="Completed" class="btn btn-primary btn-sm btn-block" (click)="sortByTasksCompleted()">Completed</button>
       </div>
     </div>
     <hr>
   </form>
   <div *ngFor="let task of respTask">
-      <app-task-edit [task]="task"></app-task-edit>
+      <app-task-edit [task]="task" (endTaskEmitter)="onEndTaskUpdate($event)"></app-task-edit>
     </div>
 
 </div>

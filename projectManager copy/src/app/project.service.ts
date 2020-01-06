@@ -12,6 +12,7 @@ export class ProjectService {
   private baseUrl = '/api/v1/projectmanager/users';
   private projectBaseUrl = '/api/v1/projectmanager/projects';
   private taskBaseUrl = '/api/v1/projectmanager/tasks';
+  private endTaskBaseUrl = '/api/v1/projectmanager/tasks/endTasks';
 
   constructor(private http: HttpClient) { }
 
@@ -60,6 +61,10 @@ export class ProjectService {
 
   editTask(id: number, value: any): Observable<Object> {
     return this.http.put(`${this.taskBaseUrl}/${id}`, value);
+  }
+
+  endTasksById(id: number, value: any): Observable<any> {
+    return this.http.put(`${this.endTaskBaseUrl}/${id}`, value);
   }
 
 }

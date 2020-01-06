@@ -54,17 +54,17 @@
       Sort:
     </div>
     <div class="mr-2">
-      <button type="button" name="FirstName" class="btn btn-primary btn-sm btn-block">First Name</button>
+      <button type="button" name="FirstName" class="btn btn-primary btn-sm btn-block" (click)="sortByFirstName()">First Name</button>
     </div>
     <div class="mr-2">
-      <button type="button" name="LastName" class="btn btn-primary btn-sm btn-block">Last Name</button>
+      <button type="button" name="LastName" class="btn btn-primary btn-sm btn-block" (click)="sortByLastName()">Last Name</button>
     </div>
     <div class="mr-2">
-      <button type="button" name="Id" class="btn btn-primary btn-sm btn-block">Id</button>
+      <button type="button" name="Id" class="btn btn-primary btn-sm btn-block" (click)="sortByEmpId()">Id</button>
     </div>
   </div>
   <hr>
-   <div *ngFor="let user of users | sortBy:'asc': 'firstName' | filter: searchText: 'firstName'">
+   <div *ngFor="let user of users | filter: searchText: 'firstName'">
     <app-view-user [user]="user" (editUser)="onEdit($event)"></app-view-user>
   </div>
 </div>

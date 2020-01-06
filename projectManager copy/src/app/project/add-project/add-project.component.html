@@ -119,16 +119,16 @@
       Sort By:
     </div>
     <div class="col-md-auto mr-2">
-      <button type="button" name="StartDate" class="btn btn-primary btn-sm btn-block">Start Date</button>
+      <button type="button" name="StartDate" class="btn btn-primary btn-sm btn-block" (click)="sortByStartDate()">Start Date</button>
     </div>
     <div class="col-md-auto mr-2">
-      <button type="button" name="EndDate" class="btn btn-primary btn-sm btn-block">End Date</button>
+      <button type="button" name="EndDate" class="btn btn-primary btn-sm btn-block" (click)="sortByEndDate()">End Date</button>
     </div>
     <div class="col-md-auto mr-2">
-      <button type="button" name="Priority" class="btn btn-primary btn-sm btn-block">Priority</button>
+      <button type="button" name="Priority" class="btn btn-primary btn-sm btn-block" (click)="sortByPriority()">Priority</button>
     </div>
     <div class="col-md-auto mr-2">
-      <button type="button" name="Completed" class="btn btn-primary btn-sm btn-block">Completed</button>
+      <button type="button" name="Completed" class="btn btn-primary btn-sm btn-block" (click)="sortByTasksCompleted()">Completed</button>
     </div>
   </div>
   <hr>
